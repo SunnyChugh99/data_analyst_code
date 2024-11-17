@@ -1,0 +1,383 @@
+https://docs.google.com/document/d/1HMc0Ac-lTsXlsFEjuKC6yzXIIhlKmcX8zqFYJsAC568/edit?usp=drive_link
+—-------------------------------------------------------------------------
+COMMON TECHNICAL QUESTIONS:
+—-------------------------------------------------------------------------
+Docker vs Kuberenetes
+In practice, it's common to use Docker to create containerized applications and then use Kubernetes to orchestrate and manage those containers in a production environment. Kubernetes can deploy and manage Docker containers, among other container runtimes.
+
+MVC
+
+
+MVC stands for Model-View-Controller, and it is a design pattern commonly used in software development to organize code in a way that separates concerns and improves maintainability. The MVC pattern consists of three main components:
+Model:
+Represents the application's data and business logic.
+Responsible for managing data, logic, and rules of the application.
+It notifies the View when the data changes so that the UI can be updated.
+View:
+Represents the user interface and presentation of the application.
+Displays data from the Model to the user and sends user input back to the Controller.
+Does not contain business logic but may have some presentational logic.
+Controller:
+Acts as an intermediary between the Model and the View.
+Receives user input from the View, processes it (possibly involving the Model), and updates the View accordingly.
+Manages the flow of data between the Model and the View.
+The main goal of the MVC pattern is to separate the concerns of data (Model), presentation (View), an
+
+d user input (Controller), making the code more modular, scalable, and easier to maintain. This separation allows for changes in one component without affecting the others, promoting code reusability and testability.
+Different variations and adaptations of the MVC pattern exist in various frameworks and programming languages, such as Django (Python), Ruby on Rails (Ruby), and ASP.NET MVC (C#).
+
+
+Websockets v socketio
+
+
+
+WebSockets is a communication protocol that provides full-duplex communication channels over a single, long-lived TCP connection. It allows for real-time, bidirectional communication between a client (usually a web browser) and a server. Unlike traditional HTTP, which is based on a request-response model, WebSockets enable constant communication between the client and server, allowing both sides to send messages independently.
+Socket.IO is a JavaScript library that enables real-time, bidirectional communication between clients (usually web browsers) and servers. It's built on top of the WebSocket protocol but includes additional features to handle various transport mechanisms and ensure compatibility in different environments. Socket.IO simplifies the development of real-time applications by providing a higher-level API and dealing with the complexities of handling different network conditions.
+
+Socket.IO and WebSockets are both technologies that facilitate real-time bidirectional communication between clients and servers, but they have some differences:
+Protocol:
+WebSockets use a standardized protocol (RFC 6455) for full-duplex communication over a single, long-lived TCP connection.
+Socket.IO is a library built on top of WebSockets but includes a higher-level protocol that provides additional features, such as fallback mechanisms for compatibility in various environments.
+Fallback Mechanism:
+WebSockets rely solely on the WebSocket protocol and do not include a fallback mechanism. If WebSocket connections are not supported or blocked, traditional HTTP polling or other protocols need to be considered separately.
+Socket.IO includes a fallback mechanism that allows it to use different transport protocols (like long polling, AJAX, etc.) if WebSocket connections are not supported or if there are issues with connectivity.
+Compatibility:
+WebSockets are supported by most modern browsers, but they may face restrictions in certain network environments or by restrictive firewalls.
+Socket.IO is designed for broader compatibility and can work in environments where WebSockets are not supported or face restrictions.
+Ease of Use:
+WebSockets provide a lower-level API for real-time communication. Developers need to handle details like connection establishment, message framing, and error handling.
+Socket.IO provides a higher-level API, abstracting away many of the complexities of real-time communication. It simplifies the development process by offering features like automatic reconnection, event handling, and broadcasting.
+Event Handling:
+Both WebSockets and Socket.IO support event-driven communication, allowing clients and servers to exchange messages based on events.
+Socket.IO's event system is a bit more feature-rich, allowing developers to easily define and handle custom events.
+Use Cases:
+WebSockets are suitable for applications that require low-latency, high-throughput communication, such as online gaming, financial applications, and live chat applications.
+Socket.IO is often chosen for projects where broader compatibility and ease of use are prioritized, such as chat applications, collaboration tools, and applications with real-time features.
+In summary, while WebSockets are a low-level protocol for real-time communication, Socket.IO is a higher-level library built on top of WebSockets that provides additional features for compatibility and ease of use. The choice between them depends on the specific requirements of your project and the desired level of abstraction and compatibility.
+
+
+TRANSACTION
+A database transaction is a unit of work that represents a series of one or more operations on a database. These operations are executed as a single, indivisible, and atomic unit, meaning that they either all succeed or all fail. The primary purpose of database transactions is to ensure the consistency, integrity, and isolation of data in a database.
+In short, a database transaction adheres to the ACID properties:
+
+Syntax of transaction
+BEGIN;
+
+….
+
+COMMIT;
+BEGIN;
+
+….
+
+ROLLBACK;
+
+
+
+In the context of database transactions and isolation levels, various phenomena can occur when multiple transactions are executed concurrently. Here are explanations of some common phenomena:
+Dirty Read:
+Definition: A dirty read occurs when one transaction reads data that has been modified by another transaction but has not been committed yet.
+Scenario: Transaction A modifies a row, and before it commits, Transaction B reads the modified but uncommitted data. If Transaction A is rolled back, Transaction B has read data that was never permanently stored.
+Non-Repeatable Read:
+Definition: A non-repeatable read occurs when a transaction reads a piece of data multiple times, and between those reads, another transaction modifies or deletes the data.
+Scenario: Transaction A reads a value, and while Transaction A is still in progress, Transaction B modifies or deletes the same value. When Transaction A reads the value again, it gets a different result, leading to inconsistency.
+Phantom Read:
+Definition: A phantom read occurs when a transaction reads a set of rows that satisfy a certain condition, and between subsequent reads, another transaction inserts, updates, or deletes rows that affect the condition.
+Scenario: Transaction A reads all rows where a certain condition is met. Meanwhile, Transaction B inserts new rows or modifies existing ones that also satisfy the condition. When Transaction A reads the same set of rows again, it encounters rows that were not present during the initial read, resulting in phantom (unexpected) data.
+serialization anomaly
+The term "serialization anomaly" refers to a type of inconsistency that can occur when multiple transactions are executed concurrently in a database. Serialization anomalies can occur when transactions are not properly isolated from each other, and they can lead to unexpected and incorrect results. The concept is closely related to the concept of serializability in database transactions.
+There are three types of serialization anomalies:
+Dirty Write (or Dirty Update):
+Definition: A dirty write occurs when one transaction overwrites the uncommitted changes made by another transaction.
+Scenario: Transaction A updates a row, and before it commits, Transaction B updates the same row. If Transaction A is rolled back, the changes made by Transaction B are now based on inconsistent or "dirty" data.
+Lost Update:
+Definition: A lost update occurs when two transactions read the same data concurrently, and both attempt to update the data. However, one of the updates is lost because the changes made by one transaction overwrite the changes made by the other.
+Scenario: Transaction A and Transaction B both read the same data. Transaction A updates the data and commits. Before Transaction B reads the updated data, it modifies the same data based on the original state, potentially overwriting the changes made by Transaction A.
+Inconsistent Retrievals (or Uncommitted Data):
+Definition: Inconsistent retrievals occur when a transaction reads data that has been modified by another transaction, but the changes have not been committed yet.
+Scenario: Transaction A reads a row, and before it commits, Transaction B updates the same row. If Transaction B is rolled back, the changes made by Transaction B are lost, and Transaction A has read inconsistent or "uncommitted" data.
+Isolation levels in database transactions determine how transactions interact with each other when executed concurrently. The SQL standard defines four standard isolation levels, each offering different levels of consistency and concurrency control. These isolation levels are:
+Read Uncommitted:
+Description: In this isolation level, transactions are not isolated from each other. A transaction can read uncommitted changes made by other transactions. This allows for the highest level of concurrency but introduces the risk of dirty reads, non-repeatable reads, and phantom reads.
+Pros: High concurrency.
+Cons: Increased risk of data inconsistency.
+Read Committed:
+Description: In this level, a transaction can only read committed data. This prevents dirty reads but allows for non-repeatable reads and phantom reads. Each read within a transaction sees only committed changes made by other transactions.
+Pros: Reduced risk of dirty reads.
+Cons: Still allows non-repeatable reads and phantom reads.
+Repeatable Read:
+Description: In this level, a transaction ensures that it can repeat the same read operation and get the same results throughout its duration. This prevents dirty reads and non-repeatable reads but still allows for phantom reads. The database usually uses locks to achieve this isolation level.
+Pros: Prevents non-repeatable reads.
+Cons: Allows phantom reads.
+Serializable:
+Description: Serializable is the strictest isolation level. It ensures that transactions are executed as if they were the only transactions in the system. It eliminates dirty reads, non-repeatable reads, and phantom reads by using locks to restrict access to the data until the transaction is completed.
+Pros: Highest level of data consistency.
+Cons: Can lead to decreased concurrency and potential performance impact due to the use of locks.
+Choosing the appropriate isolation level depends on the specific requirements of the application. While higher isolation levels provide stronger consistency guarantees, they may come with a performance cost in terms of increased contention and reduced concurrency. Developers need to carefully consider the trade-offs and select the isolation level that best fits the application's needs while maintaining the desired balance between consistency and performance.
+
+MIDDLEWARES
+
+Middleware is software that acts as a bridge or intermediary between different applications, services, or components in a software architecture. It facilitates communication and integration between these elements, allowing them to work together seamlessly.
+Middleware typically provides common services such as data communication, message routing, and transaction management. It abstracts the underlying complexities of different technologies and platforms, enabling interoperability in heterogeneous environments.
+Here's a brief overview of how middleware works:
+Communication: Middleware enables communication between disparate components by providing a standardized way for them to exchange data and messages.
+Integration: It allows different software systems to be integrated, ensuring that they can understand and work with each other's data and functionalities.
+Abstraction: Middleware abstracts the underlying complexities of the systems it connects, providing a consistent interface for interacting with diverse technologies.
+Security and Transaction Management: Middleware often includes features for handling security protocols and managing transactions, ensuring data integrity and reliability.
+In summary, middleware acts as a facilitator for communication and integration, playing a crucial role in connecting and coordinating different parts of a software ecosystem.
+
+Docker compose:
+Multistage docker file
+
+
+Create a own network in docker -
+Make both bank management and postgres container run on that network
+Communication between 2 stand alone containers is established
+
+Microservice architecture is a software development approach where an application is structured as a collection of loosely coupled,
+independently deployable services. 
+Each service in a microservice architecture is typically designed to perform a specific business function and 
+communicate with other services via well-defined APIs. The components of microservice architecture include:
+
+Microservices: These are the individual services that make up the application. Each microservice is focused on a single 
+business capability and is responsible for its own data storage, processing, and communication with other services.
+
+Service Communication: Services communicate with each other typically through lightweight protocols such as HTTP/REST, 
+messaging queues, or RPC (Remote Procedure Call).
+
+Service Discovery and Registry: As the number of microservices grows, it becomes important to have a mechanism for 
+services to discover and communicate with each other dynamically. Service discovery tools like Netflix Eureka, 
+Consul, or Kubernetes Service Discovery facilitate this.
+
+API Gateway: An API gateway is a server that acts as an entry point into the system and handles client requests.
+ It may handle authentication, routing, load balancing, caching, and other cross-cutting concerns. 
+ API gateways are often used to provide a unified interface to clients while hiding the complexities of the 
+ underlying microservices architecture.
+
+Event Bus/Message Broker: Many microservices architectures use asynchronous communication patterns facilitated by an
+ event bus or message broker such as Apache Kafka, RabbitMQ, or Amazon SQS. This allows services to communicate in a 
+ decoupled manner and enables event-driven architectures.
+
+Containerization and Orchestration: Microservices are often deployed using containerization technologies like Docker, 
+which encapsulate each service and its dependencies into a lightweight container. Orchestration tools like Kubernetes or 
+Docker Swarm help manage and automate the deployment, scaling, and monitoring of containerized microservices.
+
+Monitoring and Logging: Effective monitoring and logging are crucial for maintaining the health and performance of microservices.
+ Tools like Prometheus, Grafana, ELK stack (Elasticsearch, Logstash, Kibana), or centralized logging platforms help in 
+ tracking service metrics, identifying issues, and debugging.
+
+Fault Tolerance and Resilience: Microservices architectures need to be resilient to failures. Techniques such as circuit breakers,
+ retries, timeouts, and graceful degradation are employed to handle failures gracefully and prevent cascading failures.
+
+Continuous Integration and Deployment (CI/CD): Automated CI/CD pipelines are essential for deploying changes to microservices
+ rapidly and reliably. This involves automating testing, building, and deploying microservices to various environments 
+ in a repeatable and consistent manner.
+
+Security: Security concerns like authentication, authorization, and data protection are paramount in microservices architectures.
+Techniques such as OAuth2, JWT (JSON Web Tokens), HTTPS, and encryption are used to secure communication between services and authenticate users.
+
+These components work together to enable the development of scalable, flexible, and maintainable software systems using the microservices architectural style.
+
+
+-------------------------------------------------------------------------------------------------------------------------
+FROM AMAN QNS
+--------------------------------------------------------------------------------------------------------------------------
+
+Docker:
+
+1 - What is Docker?
+Docker is a platform that enables developers to build, ship, and run applications inside containers. 
+Containers provide a lightweight and portable environment for software, ensuring consistency across different environments.
+
+Advantages of using Docker:
+A-) Portability: Docker containers can run on any platform that supports Docker, making applications easily portable.
+B-) Isolation: Containers isolate applications from their environment and ensure consistency across different environments.
+C-) Efficiency: Docker optimizes resource utilization by running multiple containers on the same machine without 
+compromising performance.
+D-) Scalability: Docker's architecture allows for easy scaling of applications, both horizontally and vertically.
+
+
+2 - What is a Container?
+A container is a lightweight, standalone, and executable software package that contains everything needed to run a 
+piece of software, including code, runtime, system tools, libraries, and settings. Containers isolate applications 
+from their environment and ensure consistency across different environments.
+
+3 - What is a Dockerfile?
+A Dockerfile is a text file that contains instructions for building a Docker image. It specifies the environment and 
+configuration needed to create a Docker image, including base image, dependencies, and commands to run during image creation.
+
+4 - What are Docker images?
+Docker images are read-only templates used to create Docker containers. They contain the application code, runtime, 
+libraries, dependencies, and other configuration needed to run the application. Images are created from Dockerfiles and can 
+be shared, distributed, and reused.
+
+5 - What can you tell about Docker Compose?
+Docker Compose is a tool for defining and running multi-container Docker applications. It uses a YAML file to define 
+the services, networks, and volumes required for the application, allowing developers to manage complex Docker setups with ease.
+
+6 - What is the Docker command that lists the status of all Docker containers?
+The Docker command docker ps lists the status of all running Docker containers. To include all containers, including
+ stopped ones, you can use docker ps -a.
+
+
+7 - How many Docker components are there?
+Docker consists of three main components: Docker Engine, Docker Images, and Docker Containers.
+
+8 - Difference between hypervisor and Docker:
+Hypervisor: A hypervisor is a software or hardware platform that enables the virtualization of physical hardware, 
+allowing multiple operating systems to run on the same physical machine.
+Docker: Docker is a containerization platform that enables the creation and deployment of lightweight, portable 
+containers for applications. Unlike virtual machines, containers share the host operating system's kernel and are
+ more lightweight and efficient.
+
+9 -  List the most commonly used instructions in Dockerfile:
+FROM: Specifies the base image for the Docker image.
+RUN: Executes commands during the image build process.
+COPY/ADD: Copies files and directories from the host into the Docker image.
+WORKDIR: Sets the working directory inside the Docker container.
+EXPOSE: Exposes specified ports on the Docker container.
+CMD/ENTRYPOINT: Specifies the command to run when the container starts.
+
+Kubernetes:
+
+1 - What is Kubernetes?
+Kubernetes is an open-source container orchestration platform that automates the deployment, scaling, and
+management of containerized applications. It provides features for container scheduling, load balancing, service discovery,
+and self-healing, making it easier to deploy and manage complex containerized applications at scale.
+
+
+
+2 - What is orchestration when it comes to software and DevOps?
+Orchestration in software and DevOps refers to the automated coordination and management of multiple software 
+components, services, and infrastructure elements to ensure they work together seamlessly. It involves tasks
+ such as provisioning, deployment, scaling, and monitoring of software systems.
+
+ 3 - How are Kubernetes and Docker related?
+Kubernetes and Docker are related but serve different purposes. Docker is a platform for building, shipping, 
+and running containers, while Kubernetes is a container orchestration platform that automates the deployment, scaling, 
+and management of containerized applications. Kubernetes can manage Docker containers along with other container runtimes.
+
+4 - What are the main differences between Docker Swarm and Kubernetes?
+Architecture: Docker Swarm follows a simpler architecture and is tightly integrated with Docker Engine, 
+while Kubernetes has a more complex architecture with multiple components such as master nodes, worker nodes, and 
+etcd clusters.
+Features: Kubernetes offers advanced features for container orchestration, including auto-scaling, rolling updates, 
+and service discovery, while Docker Swarm provides basic orchestration capabilities.
+Community and Ecosystem: Kubernetes has a larger and more active community with extensive third-party integrations 
+and ecosystem support, while Docker Swarm's community and ecosystem are smaller in comparison.
+
+
+5 - Name the initial namespaces from which Kubernetes starts?
+Kubernetes starts with four initial namespaces:
+default: The default namespace for objects with no other namespace specified.
+kube-system: The namespace for Kubernetes system objects and components.
+kube-public: The namespace for publicly accessible resources.
+kube-node-lease: The namespace for node lease information.
+
+
+Unit testing
+---------------------------------------------------------------------------------
++-What is Mocking?
++What is the difference between unit tests and functional tests?
+
+
+
+DEVOPS
+---------------------------------------------------------------------------------
+Difference between continuous delivery and deployment
+What are artifacts
+
+
+
+Association, Aggregation and Composition
+Which Constructor is called first inheritance
+
+
+ACID database
+
+
++What is singleton pattern
++Why we need singleton pattern
+
+** how to migrate from 1 database to another  -- challenges
+** CI/CD
+
+allow a method to inherit in child class but avoid its access from an instance : make it protected
+
+
+sql : joins left, right, cross, inner
+stored proc and function diff
+execution plan improvement
+indexes : why clustered and non clustered
+can clustered index be created without primary key
+unit testing development approach
+
+
+
+MICROSERVICE Architecture
+
+
+Microservice architecture is characterized by breaking down applications into smaller, independent services that can be developed, deployed, and scaled separately. Here are some key components of microservice architecture:
+
+Services: The fundamental building blocks of microservice architecture are services, which represent discrete
+units of functionality. Each service is responsible for a specific business function and can be developed, deployed, and maintained independently.
+
+Decentralized Data Management: In microservice architecture, each service typically manages its own database. 
+This decentralization allows services to use the database technology best suited to their needs and enables greater
+ scalability and autonomy.
+
+API Gateway: An API gateway is a service that sits between clients and the microservices. It acts as a single entry point 
+for clients to access the various services, handling tasks such as authentication, routing, load balancing, and 
+protocol translation.
+
+Fault Tolerance and Resilience: Microservices need to be resilient to failures and faults in the system. 
+Techniques such as circuit breakers, retries, and fallbacks are employed to handle failures gracefully and prevent 
+cascading failures across the system.
+
+Event-Driven Communication: Microservices often communicate with each other asynchronously through events.
+ Event-driven architectures facilitate loose coupling between services and enable better scalability and resilience.
+
+Containerization and Orchestration: Microservices are commonly deployed using containerization technologies like Docker, 
+which package services and their dependencies into lightweight, portable containers. 
+Orchestration tools like Kubernetes are used to manage and scale these containers in a dynamic and efficient manner.
+
+Monitoring and Observability: Given the distributed nature of microservices, monitoring and observability are crucial for 
+ensuring system health and diagnosing issues. Tools for logging, metrics collection, tracing, and monitoring help
+developers and operators gain insight into the performance and behavior of the system.
+Continuous Integration and Deployment (CI/CD): Microservices are typically deployed frequently and independently. 
+
+CI/CD pipelines automate the process of building, testing, and deploying services, enabling rapid and reliable delivery of
+changes to production.
+
+
+
+Monolithic Architecture:
+In a monolithic architecture, the entire application is developed as a single unit. All components of the application, including the user interface, business logic, and data access layers, are tightly integrated into a single codebase and deployed as a single unit.
+
+Advantages:
+
+Simplicity: Monolithic architectures are often simpler to develop, deploy, and manage, especially for small to medium-sized applications.
+Performance: Since all components are tightly integrated, there is minimal overhead in communication between different parts of the application, resulting in potentially better performance.
+Ease of Testing: Testing a monolithic application can be simpler as all components are in one codebase, making it easier to set up and execute tests.
+Disadvantages:
+
+Scalability: Scaling a monolithic application can be challenging, as the entire application needs to be scaled together. This can lead to inefficiencies, especially if certain components require more resources than others.
+Flexibility: Making changes to a monolithic application can be more difficult, as changes to one part of the application may require redeploying the entire application.
+Fault Tolerance: A fault in one part of the application can potentially bring down the entire system, leading to a single point of failure.
+Microservice Architecture:
+Microservice architecture breaks down the application into smaller, independent services, each responsible for a specific business function. These services can be developed, deployed, and scaled independently, often using different technologies and programming languages.
+
+Advantages:
+
+Scalability: Microservices can be individually scaled based on demand, allowing for more efficient resource utilization.
+Flexibility: Each service can be developed, deployed, and updated independently, allowing for faster iteration and innovation.
+Resilience: Since microservices are decoupled, failures in one service are less likely to impact other services, leading to greater fault tolerance.
+Technology Diversity: Microservices allow for the use of different technologies and programming languages, enabling teams to use the best tool for each job.
+Continuous Deployment: Microservices are well-suited for continuous deployment practices, allowing for rapid and frequent updates without disrupting the entire application.
+Disadvantages:
+
+Complexity: Managing a distributed system of microservices can introduce complexity, especially in terms of service discovery, inter-service communication, and data consistency.
+Operational Overhead: Operating and monitoring a large number of microservices can require significant infrastructure and tooling.
+Network Overhead: Communication between microservices often occurs over the network, which can introduce latency and overhead compared to in-process communication in monolithic architectures.
+Data Management: Microservices often have their own databases, which can lead to challenges in maintaining data consistency and managing distributed transactions.
+In summary, while monolithic architectures offer simplicity and ease of development, microservice architectures provide greater flexibility, scalability, and resilience at the cost of increased complexity and operational overhead. The choice between the two architectures depends on factors such as the size and complexity of the application, the organization's development and operational capabilities, and its scalability and fault tolerance requirements.
